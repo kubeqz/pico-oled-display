@@ -1,0 +1,3 @@
+# Allow non-root access to the PicoLED device. Install with:
+#   sudo cp 99-picoled.rules /etc/udev/rules.d/ && sudo udevadm control --reload && sudo udevadm trigger
+SUBSYSTEM=="usb", ATTR{idVendor}=="1209", ATTR{idProduct}=="0001", MODE="0666", TAG+="uaccess"
