@@ -207,6 +207,7 @@ def _main(argv=None) -> None:
     ap = argparse.ArgumentParser(description="PicoLED SSD1309 USB control")
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("ping")
+    sub.add_parser("verify")
     sub.add_parser("init")
     sub.add_parser("clear")
     p = sub.add_parser("fill"); p.add_argument("pattern", type=lambda s: int(s, 0))
@@ -223,6 +224,22 @@ def _main(argv=None) -> None:
     with PicoLED() as d:
         if a.cmd == "ping":
             print(d.ping())
+        elif a.cmd == "verify":
+            print(f"USB connection OK: {d.ping()}")
+            d.init()
+            for label, pattern in (("all pixels on", 0xFF), ("all pixels off", 0x00)):
+                d.fill(pattern)
+                input(f"Check that the display shows {label}, then press Enter to continue...")
+
+            checkerboard = bytearray(FB_SIZE)
+            for y in range(HEIGHT):
+                for x in range(WIDTH):
+                    if (x + y) % 2 == 0:
+                        checkerboard[(y // 8) * WIDTH + x] |= 1 << (y % 8)
+            d.frame(checkerboard)
+            input("Check that a sharp checkerboard is visible, then press Enter to finish...")
+            d.clear()
+            print("Display verification complete.")
         elif a.cmd == "init":
             d.init()
         elif a.cmd == "clear":
@@ -256,7 +273,7 @@ def _demo(d: PicoLED) -> None:
     img, draw = d.new_canvas()
     t0 = time.time()
     frames = 0
-    while time.time() - t0 < 10:
+    while time.time() - t0 < 100:
         t = time.time() - t0
         draw.rectangle((0, 0, WIDTH - 1, HEIGHT - 1), fill=0, outline=1)
         cx = 64 + int(50 * math.sin(t * 2))

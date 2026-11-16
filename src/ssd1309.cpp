@@ -37,7 +37,7 @@ void SSD1309::init() {
         0xD3, 0x00,       // display offset
         0x40,             // start line 0
         0x20, 0x00,       // horizontal addressing mode
-        0xA1,             // segment remap (col 127 -> SEG0)
+        0xA0,             // segment remap off
         0xC8,             // COM scan direction remapped
         0xDA, 0x12,       // COM pins: alternative config
         0x81, 0x7F,       // contrast

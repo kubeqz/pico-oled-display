@@ -74,7 +74,7 @@ To flash manually, hold **BOOT** while plugging in USB (or while pressing RESET)
 
 > **Important: path with a backslash.** If the project folder name contains a `\` (for example `Projects\picoled`), linking fails with `cannot open linker script file .../memmap_default.ld`. The backslash is dropped from the linker script path. Rename the folder (for example to `Projects/picoled`) to fix it.
 
-At startup the firmware initializes the display and draws a 1-pixel border. That confirms the wiring works before you connect from the PC.
+At startup the firmware initializes the display and draws a 1-pixel border. To check the panel before sending images, run the host `verify` command below. The SPI interface is write-only, so only visual confirmation can verify that the OLED received the display data.
 
 ### Configuration (build flags)
 
@@ -164,6 +164,7 @@ python3 -m pip install -r requirements.txt   # pyusb + Pillow (Pillow is optiona
 ### Command-line tool
 
 ```bash
+python3 picoled.py verify                  # check USB, then visually verify the OLED patterns
 python3 picoled.py ping                     # {'version': '1.0', 'width': 128, 'height': 64}
 python3 picoled.py text "Hello\nWorld" --size 16
 python3 picoled.py image picture.png --threshold 100
