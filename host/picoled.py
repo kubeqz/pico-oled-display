@@ -219,6 +219,7 @@ def _main(argv=None) -> None:
     p = sub.add_parser("flip"); p.add_argument("state", choices=["on", "off"])
     p = sub.add_parser("raw"); p.add_argument("bytes", nargs="+", type=lambda s: int(s, 0))
     sub.add_parser("demo")
+    sub.add_parser("pacman")
     a = ap.parse_args(argv)
 
     with PicoLED() as d:
@@ -262,28 +263,11 @@ def _main(argv=None) -> None:
         elif a.cmd == "raw":
             d.raw_command(*a.bytes)
         elif a.cmd == "demo":
-            _demo(d)
-
-
-def _demo(d: PicoLED) -> None:
-    import math
-    import time
-
-    print(d.ping())
-    img, draw = d.new_canvas()
-    t0 = time.time()
-    frames = 0
-    while time.time() - t0 < 100:
-        t = time.time() - t0
-        draw.rectangle((0, 0, WIDTH - 1, HEIGHT - 1), fill=0, outline=1)
-        cx = 64 + int(50 * math.sin(t * 2))
-        cy = 32 + int(20 * math.cos(t * 3))
-        draw.ellipse((cx - 8, cy - 8, cx + 8, cy + 8), fill=1)
-        fps = frames / t if t > 0 else 0
-        draw.text((3, 2), f"{fps:5.1f} fps", fill=1)
-        d.show_image(img)
-        frames += 1
-    print(f"{frames / (time.time() - t0):.1f} fps")
+            from demo import run
+            run(d, WIDTH, HEIGHT)
+        elif a.cmd == "pacman":
+            from pacman import run
+            run(d, WIDTH, HEIGHT)
 
 
 if __name__ == "__main__":

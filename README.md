@@ -57,6 +57,8 @@ src/main.cpp           USB vendor interface + command parser
 src/protocol.h         USB protocol definitions (commands, status codes)
 src/ssd1309.h/.cpp     Minimal SSD1309 SPI driver
 host/picoled.py        Python wrapper + command-line tool
+host/demo.py           Standalone animated demo
+host/pacman.py         Standalone self-playing Pac-Man game
 host/requirements.txt  Python dependencies
 host/99-picoled.rules  Linux udev rule for non-root access
 ```
@@ -176,8 +178,12 @@ python3 picoled.py flip on|off              # rotate 180°
 python3 picoled.py power on|off
 python3 picoled.py raw 0xA5                 # raw SSD1309 command(s): entire display on
 python3 picoled.py init                     # re-initialize (reset) the display
-python3 picoled.py demo                     # 10 s animation with FPS counter
+python3 demo.py                            # animation with FPS counter
+python3 pacman.py                          # random maze; ghosts patrol local areas and vanish when eaten
 ```
+
+The demo and Pac-Man modes are also available as `python3 picoled.py demo` and
+`python3 picoled.py pacman`.
 
 ### Library API
 
